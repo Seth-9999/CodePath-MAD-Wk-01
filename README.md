@@ -6,8 +6,6 @@
 ` Flashcard application.  User can read the question and then click on the question to see the answer.
 
 ### App Walk-though
-`TODO://` Add the URL to your animated app walk-though `gif` in the image tag below. Make sure the gif actually renders and animates when viewing this README. (☝️ Remove this paragraph after after adding gif)
-
 <img src="https://github.com/Seth-9999/CodePath-MAD-Wk-01/blob/main/Wk1_Lab.gif" width=200><br>
 
 ## Required
