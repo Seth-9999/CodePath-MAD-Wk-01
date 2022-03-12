@@ -10,8 +10,8 @@
         android:id="@+id/flashcard_question_textview"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:gravity="center"
         android:background="@color/green"
+        android:gravity="center"
         android:text="Where are Siafu ants typically found?"
         android:textColor="@color/red"
         android:textSize="40sp" />
@@ -20,11 +20,20 @@
         android:id="@+id/flashcard_answer_textview"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:gravity="center"
         android:background="@color/green"
-        android:visibility="invisible"
+        android:gravity="center"
         android:text="Africa"
         android:textColor="@color/red"
-        android:textSize="40sp" />
+        android:textSize="40sp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/flashcard_question_textview"
+        android:id="@+id/add_flashcard"
+        android:src="@drawable/icon_add"/>
+        />
+
 
 </RelativeLayout>
