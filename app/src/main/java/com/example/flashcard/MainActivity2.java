@@ -40,6 +40,12 @@ public class MainActivity2 extends AppCompatActivity {
                 String answer = new_flashcard_answer.getText().toString();
                 System.out.println("Entered Question:    " + question);
                 System.out.println("Entered answer:     " + answer);
+
+                Intent data_to_flashcard = new Intent();
+                data_to_flashcard.putExtra("cardQuestion", question);
+                data_to_flashcard.putExtra("cardAnswer", answer);
+                setResult(RESULT_OK, data_to_flashcard);
+
                 finish();
 
 
