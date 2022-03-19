@@ -27,12 +27,13 @@
         android:textSize="40sp"
         android:visibility="invisible" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@id/flashcard_question_textview"
+    <ImageView
         android:id="@+id/add_flashcard"
-        android:src="@drawable/icon_add"/>
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/flashcard_question_textview"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/icon_add"
         />
 
 
