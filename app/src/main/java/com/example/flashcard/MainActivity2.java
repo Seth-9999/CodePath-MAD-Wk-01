@@ -20,13 +20,14 @@ public class MainActivity2 extends AppCompatActivity {
         EditText new_flashcard_text = findViewById(R.id.new_flashcard_question);
         EditText new_flashcard_answer = findViewById(R.id.new_flashcard_answer);
 
-        ImageView save_flashcard_icon = findViewById(R.id.add_flashcard);
+        ImageView save_flashcard_icon = findViewById(R.id.save_flashcard);
         ImageView cancel_flashcard_icon = findViewById(R.id.cancel_flashcard);
 
         cancel_flashcard_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 System.out.println("Cancel button clicked");
+                finish();
             }
         });
 
@@ -35,10 +36,13 @@ public class MainActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 System.out.println("Save button clicked");
+                String question = new_flashcard_text.getText().toString();
+                String answer = new_flashcard_answer.getText().toString();
+                System.out.println("Entered Question:    " + question);
+                System.out.println("Entered answer:     " + answer);
+                finish();
 
 
-               // String question = new_flashcard_text.getText().toString();
-                //String answer = new_flashcard_answer.getText().toString();
 
             }
         });

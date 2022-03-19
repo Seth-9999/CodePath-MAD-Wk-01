@@ -29,9 +29,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.393" />
 
-    <!-- Cancel button -->
+    <!-- Save button -->
 
     <ImageView
+        android:id="@+id/save_flashcard"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/icon_save"
@@ -40,6 +41,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.609" />
+
+    <!-- Cancel button -->
 
     <ImageView
         android:id="@+id/cancel_flashcard"
