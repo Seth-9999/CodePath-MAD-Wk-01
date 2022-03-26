@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
         TextView flashcardQuestion = findViewById(R.id.flashcard_question_textview);
         TextView flashcardAnswer = findViewById(R.id.flashcard_answer_textview);
 
-        if (allFlashcards == null || allFlashcards.size() == 0){
-            flashcardQuestion.setText("I left main are Siafu ants typically found?");
-            flashcardAnswer.setText("Africa");
+        if (allFlashcards == null || allFlashcards.size() <= 0){
+            flashcardQuestion.setText("No flashcard found");
+            flashcardAnswer.setText("No flashcard answer");
         } else {
             Flashcard latest_flashcard = allFlashcards.get(idxCard);
             flashcardQuestion.setText(latest_flashcard.getQuestion());
@@ -50,24 +50,34 @@ public class MainActivity extends AppCompatActivity {
 
     protected void deleteCurrentFlashcard(){
         // will show prior flashcard or (index - 1) flashcard
+        System.out.println("Start!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
 
         if (allFlashcards != null && allFlashcards.size() != 0) {
             Flashcard currentFlashcard = allFlashcards.get(currentCardDisplayedIndex);
+            System.out.println("Weird!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
             flashcardDatabase.deleteCard(currentFlashcard.getQuestion().toString());
             allFlashcards = flashcardDatabase.getAllCards();
 
-            // ShowFlashcard() function
-            currentCardDisplayedIndex--;
+            if(currentCardDisplayedIndex == 0){
+                currentCardDisplayedIndex = 0;
+            } else {
+                currentCardDisplayedIndex--;
+            }
+            System.out.println("Temp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+
+            getCurrentFlashcardInfo(currentCardDisplayedIndex);
+
             displayCurrentFlashcard_QuestionOnly();
 
-            // empty flashcard piece of show flashcard function
             TextView flashcardQuestion = findViewById(R.id.flashcard_question_textview);
-            TextView flashcardAnswer = findViewById(R.id.flashcard_answer_textview);
             Snackbar.make(flashcardQuestion, "Selected card was deleted", Snackbar.LENGTH_SHORT).show();
+
+            System.out.println("End!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
 
         }
     }
 
+    // passing data between activities
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -76,17 +86,54 @@ public class MainActivity extends AppCompatActivity {
             String cardQuestion = data.getExtras().getString("cardQuestion");
             String cardAnswer = data.getExtras().getString("cardAnswer");
 
-            TextView flashcardQuestion = findViewById(R.id.flashcard_question_textview);
-            TextView flashcardAnswer = findViewById(R.id.flashcard_answer_textview);
-
-            flashcardQuestion.setText(cardQuestion);
-            flashcardAnswer.setText(cardAnswer);
-
             flashcardDatabase.insertCard(new Flashcard(cardQuestion, cardAnswer));
             allFlashcards = flashcardDatabase.getAllCards();
+
+            getCurrentFlashcardInfo(currentCardDisplayedIndex++);
+            displayCurrentFlashcard_QuestionOnly();
+
+            //TextView flashcardQuestion = findViewById(R.id.flashcard_question_textview);
+            //TextView flashcardAnswer = findViewById(R.id.flashcard_answer_textview);
+
+            //flashcardQuestion.setText(cardQuestion);
+            //flashcardAnswer.setText(cardAnswer);
+
+            //flashcardDatabase.insertCard(new Flashcard(cardQuestion, cardAnswer));
+            //allFlashcards = flashcardDatabase.getAllCards();
         }
     }
 
+    protected void nextFlashcard(){
+        System.out.println("Next button clicked!");
+
+        TextView flashcardQuestion = findViewById(R.id.flashcard_question_textview);
+        TextView flashcardAnswer = findViewById(R.id.flashcard_answer_textview);
+        boolean hasFlashcards = !(allFlashcards == null || allFlashcards.size() == 0);
+
+        if(!hasFlashcards){
+            System.out.println("Why not working!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            getCurrentFlashcardInfo(currentCardDisplayedIndex);
+            displayCurrentFlashcard_QuestionOnly();
+            Snackbar.make(flashcardQuestion, "No cards found", Snackbar.LENGTH_SHORT).show();
+
+        }
+        // has flashcards and not end of flashcard list
+        else if(hasFlashcards && (currentCardDisplayedIndex < allFlashcards.size() - 1)){
+            currentCardDisplayedIndex++;
+            getCurrentFlashcardInfo(currentCardDisplayedIndex);
+            displayCurrentFlashcard_QuestionOnly();
+        }
+        // on last flashcard
+        else{
+            currentCardDisplayedIndex = 0;
+            getCurrentFlashcardInfo(currentCardDisplayedIndex);
+            displayCurrentFlashcard_QuestionOnly();
+            Snackbar.make(flashcardQuestion, "You've reached end of cards", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+
+    // main equivalent
 
         @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +142,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         flashcardDatabase = new FlashcardDatabase(getApplicationContext());
+        allFlashcards = flashcardDatabase.getAllCards();
+
+
         getCurrentFlashcardInfo(currentCardDisplayedIndex);
+        displayCurrentFlashcard_QuestionOnly();
 
         TextView flashcardQuestion = findViewById(R.id.flashcard_question_textview);
         TextView flashcardAnswer = findViewById(R.id.flashcard_answer_textview);
@@ -131,26 +182,7 @@ public class MainActivity extends AppCompatActivity {
         next_flashcard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentCardDisplayedIndex++;
-
-                if(allFlashcards == null || allFlashcards.size() == 0){
-                    getCurrentFlashcardInfo(currentCardDisplayedIndex);
-                    displayCurrentFlashcard_AnswerOnly();
-                    //Snackbar.make(flashcardQuestion, "You've reached end of cards", Snackbar.LENGTH_SHORT).show();
-
-                }
-                else if(currentCardDisplayedIndex < allFlashcards.size() - 1){
-                    currentCardDisplayedIndex++;
-
-                    Flashcard currentFlashcard = allFlashcards.get(currentCardDisplayedIndex);
-                    flashcardQuestion.setText(currentFlashcard.getQuestion());
-                    flashcardAnswer.setText(currentFlashcard.getQuestion());
-
-                } else{
-                    currentCardDisplayedIndex = 0;
-                    Snackbar.make(flashcardQuestion, "You've reached end of cards", Snackbar.LENGTH_SHORT).show();
-
-                }
+                nextFlashcard();
             }
         });
 
