@@ -132,6 +132,49 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    protected void hideAnswerChoices(){
+        System.out.println("Trying to hide answer choices");
+
+        TextView answer1 = findViewById(R.id.flashcard_answer_choice_1);
+        TextView answer2 = findViewById(R.id.flashcard_answer_choice_2);
+        TextView answer3 = findViewById(R.id.flashcard_answer_choice_3);
+        ImageView toggle2HideAnswers = findViewById(R.id.toggle_visible_choices); // I think this is right but uncertain
+        ImageView toggle2ShowAnswers = findViewById(R.id.toggle_hidden_choices);  // I think this is right but uncertain
+
+        answer1.setText("Hidden Possible answer");
+        answer2.setText("Hidden Possible answer");
+        answer3.setText("Hidden Possible answer");
+
+        toggle2HideAnswers.setVisibility(View.INVISIBLE);
+        toggle2ShowAnswers.setVisibility(View.VISIBLE);
+    }
+
+    protected void showAnswerChoices(){
+        System.out.println("Trying to show answer choices");
+        TextView answer1 = findViewById(R.id.flashcard_answer_choice_1);
+        TextView answer2 = findViewById(R.id.flashcard_answer_choice_2);
+        TextView answer3 = findViewById(R.id.flashcard_answer_choice_3);
+        ImageView toggle2HideAnswers = findViewById(R.id.toggle_visible_choices); // I think this is right but uncertain
+        ImageView toggle2ShowAnswers = findViewById(R.id.toggle_hidden_choices);  // I think this is right but uncertain
+
+        answer1.setText("Placeholder ans 1");
+        answer2.setText("Placeholder ans 2");
+        answer3.setText("Placeholder ans 3");
+
+        toggle2HideAnswers.setVisibility(View.VISIBLE);
+        toggle2ShowAnswers.setVisibility(View.INVISIBLE);
+    }
+
+    protected void showHint(){
+        TextView hint = findViewById(R.id.hint);
+        hint.setText("No hint found. Try editing flashcard");
+    }
+
+    protected  void hideHint(){
+        TextView hint = findViewById(R.id.hint);
+        hint.setText("Hint __ click to see");
+    }
+
 
     // main equivalent
 
@@ -141,15 +184,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TextView flashcardQuestion = findViewById(R.id.flashcard_question_textview);
+        TextView flashcardAnswer = findViewById(R.id.flashcard_answer_textview);
+        TextView hint = findViewById(R.id.hint);
+        ImageView next_flashcard = findViewById(R.id.next_flashcard);
+        ImageView delete_flashcard = findViewById(R.id.delete_flashcard);
+        ImageView addFlashcardButton = findViewById(R.id.add_flashcard);
+        ImageView toggle2HideAnswers = findViewById(R.id.toggle_visible_choices); // I think this is right but uncertain
+        ImageView toggle2ShowAnswers = findViewById(R.id.toggle_hidden_choices);  // I think this is right but uncertain
+
+            // Database
         flashcardDatabase = new FlashcardDatabase(getApplicationContext());
         allFlashcards = flashcardDatabase.getAllCards();
 
-
         getCurrentFlashcardInfo(currentCardDisplayedIndex);
         displayCurrentFlashcard_QuestionOnly();
-
-        TextView flashcardQuestion = findViewById(R.id.flashcard_question_textview);
-        TextView flashcardAnswer = findViewById(R.id.flashcard_answer_textview);
+        hideAnswerChoices();
 
         // show flashcard answer when question question clicked
         flashcardQuestion.setOnClickListener(new View.OnClickListener() {
@@ -167,9 +217,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ImageView next_flashcard = findViewById(R.id.next_flashcard);
-        ImageView delete_flashcard = findViewById(R.id.delete_flashcard);
-
         // delete current flashcard
         delete_flashcard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,11 +233,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ImageView addFlashcardButton = findViewById(R.id.add_flashcard);
-
+        // add button
         addFlashcardButton.setOnClickListener(view -> {
             Intent intentAddFlashcard = new Intent(this, MainActivity2.class);
             startActivityForResult(intentAddFlashcard, 100);
+        });
+
+        // unhide button
+        toggle2ShowAnswers.setOnClickListener(view -> {
+            showAnswerChoices();
+        });
+
+        // hide button
+        toggle2HideAnswers.setOnClickListener(view -> {
+            hideAnswerChoices();
+        });
+
+
+
+        //  Not very good .... how to check if hint clicked or not......
+
+        // show hint
+        hint.setOnClickListener(view -> {
+            if(hint.getText().equals("No hint found. Try editing flashcard")){
+                showHint();
+                
+            } else {
+                hideHint();
+            }
         });
 
 
