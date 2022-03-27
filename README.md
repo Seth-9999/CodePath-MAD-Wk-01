@@ -7,7 +7,7 @@
 
 ### App Walk-though
 
-<img src="https://github.com/Seth-9999/CodePath-MAD-Wk-01/blob/main/Lab3_revised%2020220327%20545am.gif" width=200><br>
+<img src="https://github.com/Seth-9999/CodePath-MAD-Wk-01/blob/main/Lab3_revised%2020220327%20615am.gif" width=200><br>
 
 
 ## Required
