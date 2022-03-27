@@ -4,7 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/screen_border"
     tools:context=".MainActivity2">
+
+    <EditText
+        android:id="@+id/wrong_answer_choice_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Wrong Answer Choice # 2:            "
+        android:background="@color/peach"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.324"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.377" />
+
+    <EditText
+        android:id="@+id/wrong_answer_choice_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Wrong Answer Choice # 1:            "
+        android:background="@color/peach"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.323"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.285" />
+
+    <!-- Save button -->
 
     <EditText
         android:id="@+id/new_flashcard_question"
@@ -13,29 +42,29 @@
         android:hint="Enter new flashcard question: "
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.386"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.199" />
+        app:layout_constraintVertical_bias="0.061" />
 
     <EditText
         android:id="@+id/new_flashcard_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Enter answer to question: "
+        android:hint="Enter actual answer to question: "
+        android:background="@color/peach"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintHorizontal_bias="0.319"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.393" />
-
-    <!-- Save button -->
+        app:layout_constraintVertical_bias="0.169" />
 
     <ImageView
         android:id="@+id/save_flashcard"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/icon_save"
+        android:src="@drawable/ic_icon_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/cancel_flashcard"
         app:layout_constraintStart_toStartOf="parent"
