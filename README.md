@@ -7,7 +7,7 @@
 
 ### App Walk-though
 
-<img src="https://github.com/Seth-9999/CodePath-MAD-Wk-01/blob/main/Wk4_lab.gif" width=200><br>
+<img src="https://github.com/Seth-9999/CodePath-MAD-Wk-01/blob/main/Lab4.gif" width=200><br>
 
 ## Required
 - [x] User sees a transition animation when going from the main screen to the add card screen.
