@@ -3,9 +3,14 @@ package com.example.flashcard;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -54,8 +59,16 @@ public class MainActivity extends AppCompatActivity {
         TextView flashcardQuestion = findViewById(R.id.flashcard_question_textview);
         TextView flashcardAnswer = findViewById(R.id.flashcard_answer_textview);
 
+        int cx = flashcardAnswer.getWidth() / 2;
+        int cy = flashcardAnswer.getWidth() / 2;
+        float finalRadius = (float) Math.hypot(cx,cy);
+        Animator anim = ViewAnimationUtils.createCircularReveal(flashcardAnswer, cx, cy,0f, finalRadius);
+
         flashcardAnswer.setVisibility(View.VISIBLE);
         flashcardQuestion.setVisibility(View.INVISIBLE);
+
+        anim.setDuration(2000);
+        anim.start();
     }
 
     protected void displayCurrentFlashcard_QuestionOnly() {
@@ -63,6 +76,15 @@ public class MainActivity extends AppCompatActivity {
         TextView flashcardAnswer = findViewById(R.id.flashcard_answer_textview);
         flashcardQuestion.setVisibility(View.VISIBLE);
         flashcardAnswer.setVisibility(View.INVISIBLE);
+
+        TextView answer1 = findViewById(R.id.flashcard_answer_choice_1);
+        TextView answer2 = findViewById(R.id.flashcard_answer_choice_2);
+        TextView answer3 = findViewById(R.id.flashcard_answer_choice_3);
+
+        answer1.setBackgroundColor(getResources().getColor(R.color.peach));
+        answer2.setBackgroundColor(getResources().getColor(R.color.peach));
+        answer3.setBackgroundColor(getResources().getColor(R.color.peach));
+
     }
 
     protected void deleteCurrentFlashcard(){
@@ -91,39 +113,94 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    protected void nextFlashcard(){
+    protected void nextFlashcard(View view){
         System.out.println("Next button clicked!");
 
         TextView flashcardQuestion = findViewById(R.id.flashcard_question_textview);
         boolean hasFlashcards = !(allFlashcards == null || allFlashcards.size() == 0);
 
+        final Animation leftOutAnim = AnimationUtils.loadAnimation(view.getContext(), R.anim.left_out);
+        final Animation rightInAnim = AnimationUtils.loadAnimation(view.getContext(), R.anim.right_in);
+
         if(!hasFlashcards){
+            System.out.println("No flashcards in list");
             getCurrentFlashcardInfo(currentCardDisplayedIndex);
             displayCurrentFlashcard_QuestionOnly();
             Snackbar.make(flashcardQuestion, "No cards found", Snackbar.LENGTH_SHORT).show();
         }
         // has flashcards and not end of flashcard list
         else if(hasFlashcards && (currentCardDisplayedIndex < allFlashcards.size() - 1)){
-            int priorCardIndex = currentCardDisplayedIndex;
-            currentCardDisplayedIndex = getRandom(0, allFlashcards.size() - 1);
-            if(priorCardIndex == currentCardDisplayedIndex){
-                currentCardDisplayedIndex = getRandom(0, allFlashcards.size() - 1);
-            }
-            // currentCardDisplayedIndex++;
-            getCurrentFlashcardInfo(currentCardDisplayedIndex);
-            displayCurrentFlashcard_QuestionOnly();
+            System.out.println("Has flashcards and not on final card");
+
+            leftOutAnim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    System.out.println("Left out anim");
+                    flashcardQuestion.startAnimation(leftOutAnim);
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    System.out.println("Right in anim");
+
+                    flashcardQuestion.startAnimation(rightInAnim);
+
+                    int priorCardIndex = currentCardDisplayedIndex;
+                    currentCardDisplayedIndex = getRandom(0, allFlashcards.size() - 1);
+                    if(priorCardIndex == currentCardDisplayedIndex){
+                        currentCardDisplayedIndex = getRandom(0, allFlashcards.size() - 1);
+                    }
+                    // currentCardDisplayedIndex++;
+                    getCurrentFlashcardInfo(currentCardDisplayedIndex);
+                    displayCurrentFlashcard_QuestionOnly();
+                    hideAnswerChoices();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            flashcardQuestion.startAnimation(leftOutAnim);
         }
         // on last flashcard
         else{
-            int priorCardIndex = currentCardDisplayedIndex;
-            currentCardDisplayedIndex = getRandom(0, allFlashcards.size() - 1);
-            if(priorCardIndex == currentCardDisplayedIndex){
-                currentCardDisplayedIndex = getRandom(0, allFlashcards.size() - 1);
-            }
-            //currentCardDisplayedIndex = 0;
-            getCurrentFlashcardInfo(currentCardDisplayedIndex);
-            displayCurrentFlashcard_QuestionOnly();
-            //Snackbar.make(flashcardQuestion, "You've reached end of cards", Snackbar.LENGTH_SHORT).show();
+            System.out.println("On last flashcard");
+            Snackbar.make(flashcardQuestion, "You've reached end of cards", Snackbar.LENGTH_SHORT).show();
+
+            leftOutAnim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    System.out.println("Left out anim 1B");
+
+                    flashcardQuestion.startAnimation(leftOutAnim);
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    System.out.println("Right in anim 1B");
+
+                    flashcardQuestion.startAnimation(rightInAnim);
+
+                    int priorCardIndex = currentCardDisplayedIndex;
+                    currentCardDisplayedIndex = getRandom(0, allFlashcards.size() - 1);
+                    if(priorCardIndex == currentCardDisplayedIndex){
+                        currentCardDisplayedIndex = getRandom(0, allFlashcards.size() - 1);
+                    }
+                    //currentCardDisplayedIndex = 0;
+                    getCurrentFlashcardInfo(currentCardDisplayedIndex);
+                    displayCurrentFlashcard_QuestionOnly();
+                    Snackbar.make(flashcardQuestion, "You've reached end of cards", Snackbar.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+
         }
     }
 
@@ -228,6 +305,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
     // main equivalent
 
         @Override
@@ -238,6 +317,11 @@ public class MainActivity extends AppCompatActivity {
 
         TextView flashcardQuestion = findViewById(R.id.flashcard_question_textview);
         TextView flashcardAnswer = findViewById(R.id.flashcard_answer_textview);
+        TextView flashcardPossibleAns1 = findViewById(R.id.flashcard_answer_choice_1);
+        TextView flashcardPossibleAns2 = findViewById(R.id.flashcard_answer_choice_2);
+        TextView flashcardPossibleAns3 = findViewById(R.id.flashcard_answer_choice_3);
+
+
         TextView hint = findViewById(R.id.hint);
         ImageView next_flashcard = findViewById(R.id.next_flashcard);
         ImageView delete_flashcard = findViewById(R.id.delete_flashcard);
@@ -246,13 +330,56 @@ public class MainActivity extends AppCompatActivity {
         ImageView toggle2ShowAnswers = findViewById(R.id.toggle_hidden_choices);  // I think this is right but uncertain
         ImageView edit_flashcard = findViewById(R.id.edit_flashcard);
 
-            // Database
+
+        // Database
         flashcardDatabase = new FlashcardDatabase(getApplicationContext());
         allFlashcards = flashcardDatabase.getAllCards();
 
         getCurrentFlashcardInfo(currentCardDisplayedIndex);
         displayCurrentFlashcard_QuestionOnly();
         hideAnswerChoices();
+
+        // click one of answers
+        flashcardPossibleAns1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String userAnswer =  flashcardPossibleAns1.getText().toString();
+                String actualAnswer = allFlashcards.get(currentCardDisplayedIndex).getAnswer();
+
+                if (userAnswer.equals(actualAnswer)) {
+                    flashcardPossibleAns1.setBackgroundColor(Color.parseColor("#00FF00"));
+                } else {
+                    flashcardPossibleAns1.setBackgroundColor(Color.parseColor("#FFCCCB"));
+                }
+            }
+        });
+
+        flashcardPossibleAns2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String userAnswer =  flashcardPossibleAns2.getText().toString();
+                String actualAnswer = allFlashcards.get(currentCardDisplayedIndex).getAnswer();
+                if (userAnswer.equals(actualAnswer)) {
+                    flashcardPossibleAns2.setBackgroundColor(Color.parseColor("#00FF00"));
+                } else {
+                    flashcardPossibleAns2.setBackgroundColor(Color.parseColor("#FFCCCB"));
+                }
+            }
+        });
+
+        flashcardPossibleAns3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String userAnswer =  flashcardPossibleAns3.getText().toString();
+                String actualAnswer = allFlashcards.get(currentCardDisplayedIndex).getAnswer();
+                if (userAnswer.equals(actualAnswer)) {
+                    flashcardPossibleAns3.setBackgroundColor(Color.parseColor("#00FF00"));
+                }
+                else {
+                    flashcardPossibleAns3.setBackgroundColor(Color.parseColor("#FFCCCB"));
+                }
+            }
+        });
 
         // show flashcard answer when question question clicked
         flashcardQuestion.setOnClickListener(new View.OnClickListener() {
@@ -282,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
         next_flashcard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nextFlashcard();
+                nextFlashcard(view);
             }
         });
 
@@ -290,6 +417,7 @@ public class MainActivity extends AppCompatActivity {
         addFlashcardButton.setOnClickListener(view -> {
             Intent intentAddFlashcard = new Intent(this, MainActivity2.class);
             startActivityForResult(intentAddFlashcard, 100);
+            overridePendingTransition(R.anim.right_in, R.anim.left_out);
         });
 
         // Edit button
@@ -300,7 +428,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        // unhide button
+        // un-hide button
         toggle2ShowAnswers.setOnClickListener(view -> {
             showAnswerChoices();
         });
